@@ -16,7 +16,7 @@ compare_classes(values, comparison = sqrt_comparison)
 \value{
 Boolean - FALSE: not enough examples present
 
-Boolean - FALSE: not enough examples present
+Boolean - TRUE: not enough examples present
 }
 \description{
 Checks if there are enough examples for the number of classes in a variable.

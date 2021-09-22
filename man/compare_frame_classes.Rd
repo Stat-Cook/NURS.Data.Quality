@@ -17,7 +17,7 @@ compare_frame_classes(data, comparison = sqrt_comparison)
 \value{
 Boolean-vector -  FALSE: not enough examples present
 
-Boolean-vector -  FALSE: not enough examples present
+Boolean-vector -  TRUE: not enough examples present
 }
 \description{
 Check each variable of a data frame to determine if there are enough examples for the number of distinct values.  

@@ -16,7 +16,7 @@ sqrt_comparison(l_unique, l_total)
 \value{
 Boolean - FALSE: more unique values than the square root of the number of observations.
 
-Boolean - FALSE: more unique values than the square root of the number of observations.
+Boolean - TRUE: more unique values than the square root of the number of observations.
 }
 \description{
 Function for comparing two values.
