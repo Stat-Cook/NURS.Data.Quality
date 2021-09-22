@@ -4,8 +4,8 @@ sqrt_comparison <- function(l_unique, l_total){
   #' @param l_unique number of unique values
   #' @param l_total number of observations
   #' 
-  #' @return Boolean - FALSE: more unique values than the square root of the number of observations.
-  l_unique < sqrt(l_total)
+  #' @return Boolean - TRUE: more unique values than the square root of the number of observations.
+  l_unique > sqrt(l_total)
 }
 
 compare_frequencies <- function(values, limit=0.8){
@@ -18,7 +18,7 @@ compare_frequencies <- function(values, limit=0.8){
   #'  @return Boolean 
   l <- length(values)
   freq <- table(values)
-  all(freq < limit*l)
+  any(freq > limit*l)
 }
 
 compare_frame_frequencies <- function(data, limit=0.8){
@@ -42,7 +42,7 @@ compare_classes <- function(values, comparison=sqrt_comparison){
   #' @param values Vector of observations
   #' @param comparison  [optional] A function to compare the number of unique classes with the number of observations.
   #' 
-  #' @return Boolean - FALSE: not enough examples present
+  #' @return Boolean - TRUE: not enough examples present
   l_total <- length(values)
   l_unique <- length(unique(values))
   comparison(l_unique, l_total)
@@ -55,7 +55,7 @@ compare_frame_classes <- function(data, comparison=sqrt_comparison){
   #' @param data Dataframe of variables for checking
   #' @param comparison [optional] A function to compare the number of unique classes with the number of observations.
   #' 
-  #' @return Boolean-vector -  FALSE: not enough examples present
+  #' @return Boolean-vector -  TRUE: not enough examples present
   #' 
   results <- blank_result(data)
   for (name in names(data)){

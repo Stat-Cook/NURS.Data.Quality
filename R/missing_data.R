@@ -30,9 +30,9 @@ average_missing_heuristic <- function(data, limit=0.1, missing_types=MISSING_TYP
   #' @param limit Allowable rate of missingness, valued [0, 1] 
   #' @param missing_types [optional] vector of valuse to define as missing.
   #' 
-  #' @return Boolean-vector - FALSE: missing more data than the limit.
+  #' @return Boolean-vector - TRUE: missing more data than the limit.
   
-  average_missing(data, missing_types) < limit
+  average_missing(data, missing_types) > limit
   
 }
 
