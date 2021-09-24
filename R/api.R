@@ -6,6 +6,7 @@ data.quality <- function(data) {
   #' @param data Data frame to perform data quality checks on.
   #' 
   #' @return Data frame summarizing data quality metrics.
+  #' @export
   tibble(
     Variable = colnames(data),
     `Singular data` = compare_frame_frequencies(data),
@@ -16,3 +17,16 @@ data.quality <- function(data) {
 }
 
 
+start_mutual_info_app <- function(){
+  #' Start app for visualizing mutual info
+  #' 
+  #' 
+  #' 
+  #' @export
+
+  # appDir <- system.file("app", "myapp", package = "mypackage")
+  # if (appDir == "") {
+  #   stop("Could not find example directory. Try re-installing `mypackage`.", call. = FALSE)
+  # }
+  shiny::runApp("Mutual_Info/app.R")
+}
