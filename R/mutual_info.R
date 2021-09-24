@@ -3,7 +3,8 @@ encode_values <- function(values){
   #' 
   #' @param values Vector of values to be encoded.
   #' 
-  #' @return Vector of integer values 
+  #' @return Vector of integer values
+  #' @export 
   as.numeric(as.factor(values))
 }
 
@@ -13,6 +14,7 @@ mutual_info <- function(data){
   #' @param data Data frame (n by k) of observations
   #' 
   #' @return matrix (k by k) of mutual information.  Diagonal represents total information a varaible has.
+  #' @export
   copied <- data
   numeric_columns <- sapply(copied, is.numeric)
   factor_columns <- colnames(copied[!numeric_columns])

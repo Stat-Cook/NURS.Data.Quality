@@ -7,6 +7,7 @@ is.missing <- function(values, missing_types=MISSING_TYPES){
   #' @param missing_types  Vector of values classified as missing.
   #' 
   #' @return Vector of which values are 'missing'
+  #' @export
   
   sapply(values, function(i) i %in% missing_types)
 }
@@ -31,6 +32,7 @@ average_missing_heuristic <- function(data, limit=0.1, missing_types=MISSING_TYP
   #' @param missing_types [optional] vector of valuse to define as missing.
   #' 
   #' @return Boolean-vector - TRUE: missing more data than the limit.
+  #' @export
   
   average_missing(data, missing_types) > limit
   

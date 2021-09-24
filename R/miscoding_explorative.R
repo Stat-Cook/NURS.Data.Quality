@@ -5,6 +5,7 @@ sqrt_comparison <- function(l_unique, l_total){
   #' @param l_total number of observations
   #' 
   #' @return Boolean - TRUE: more unique values than the square root of the number of observations.
+  #' @export
   l_unique > sqrt(l_total)
 }
 
@@ -16,6 +17,7 @@ compare_frequencies <- function(values, limit=0.8){
   #'  @param limit The upper limit on how often one value should occur.  Real value [0, 1]. 
   #'  
   #'  @return Boolean 
+  #' @export
   l <- length(values)
   freq <- table(values)
   any(freq > limit*l)
@@ -28,6 +30,7 @@ compare_frame_frequencies <- function(data, limit=0.8){
   #' @param limit Max percentage of a variable that can be the same value
   #' 
   #' @return Boolean-vector
+  #' @export
   results <- blank_result(data)
   for (name in names(data)){
     values <- data[,name]
@@ -43,6 +46,7 @@ compare_classes <- function(values, comparison=sqrt_comparison){
   #' @param comparison  [optional] A function to compare the number of unique classes with the number of observations.
   #' 
   #' @return Boolean - TRUE: not enough examples present
+  #' @export
   l_total <- length(values)
   l_unique <- length(unique(values))
   comparison(l_unique, l_total)
@@ -56,6 +60,7 @@ compare_frame_classes <- function(data, comparison=sqrt_comparison){
   #' @param comparison [optional] A function to compare the number of unique classes with the number of observations.
   #' 
   #' @return Boolean-vector -  TRUE: not enough examples present
+  #' @export
   #' 
   results <- blank_result(data)
   for (name in names(data)){

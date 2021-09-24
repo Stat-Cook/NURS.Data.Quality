@@ -7,6 +7,7 @@ prepare_data <- function(data, outcome){
   #' @param outcome The column of data frame to be treated as the outcome state.
   #' 
   #' @return list(train_data, test_data)
+  #' @export
   y <- data[,outcome] %>% is.missing() %>% factor(levels=c(FALSE, TRUE))
   x <- data %>% select(-outcome)
 
@@ -33,6 +34,7 @@ build_model <- function(data, method="rpart"){
   #' @param method Method call from `carat::train` to use for binary-classication
   #' 
   #' @return `caret` model 
+  #' @export
   caret::train(y ~ ., data=data, method=method)
 }
 
@@ -43,6 +45,7 @@ model_roc <- function(data, model){
   #' @param model `caret` model that has been pre-trained.
   #' 
   #' @return ROC value
+  #' @export
   outcome <- data.frame(
     obs = data[,"y"],
     pred = predict(model, data)
@@ -63,6 +66,7 @@ missing_mine <- function(data, method="rpart"){
   #' @param method `caret::train` method to be applied.
   #' 
   #' @return Vector of ROC values.  Values greater than 0.5 imply some predictve power.
+  #' @export
   any_missing <- apply(is.missing(data), 2, any)
   missing_frame <- data[any_missing]
   results <- blank_result(data)

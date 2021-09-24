@@ -2,6 +2,7 @@ blank_result <- function(data){
   #' Generate a blank result vector from a data frame
   #' 
   #' @param data The data frame to template the result vector from.
+  #' @export
 
   K <- dim(data)[2]
   result <- rep(NA, K)
@@ -16,6 +17,7 @@ apply_to_dataframe <- function(data, column_function){
   #' @param column_function Function to be applied to each varaible.
   #' 
   #' @return Vector of results.
+  #' @export
   result <- blank_result(data)
   for (name in names(result)){
     values <- data[,name]
