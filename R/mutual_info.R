@@ -20,7 +20,8 @@ mutual_info <- function(data){
   factor_columns <- colnames(copied[!numeric_columns])
 
   for (name in factor_columns){
-    copied[,name] <- encode_values(copied[,name])
+    values <- unlist(copied[, name])
+    copied[, name] <- encode_values(values)
   }
   
   disc.df <- infotheo::discretize(copied)
