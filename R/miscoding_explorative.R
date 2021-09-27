@@ -18,9 +18,9 @@ compare_frequencies <- function(values, limit=0.8){
   #'  
   #'  @return Boolean 
   #' @export
-  l <- length(values)
+
   freq <- table(values)
-  any(freq > limit*l)
+  any(freq > limit*sum(freq))
 }
 
 compare_frame_frequencies <- function(data, limit=0.8){
