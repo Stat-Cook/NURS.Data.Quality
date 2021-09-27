@@ -67,6 +67,8 @@ missing_mine <- function(data, method="rpart"){
   #' 
   #' @return Vector of ROC values.  Values greater than 0.5 imply some predictve power.
   #' @export
+  is.singular <- apply(data, 2, function(i) length(unique(i)) == 1)
+  data <- data[!is.singular]
   any_missing <- apply(is.missing(data), 2, any)
   missing_frame <- data[any_missing]
   results <- blank_result(data)
