@@ -1,4 +1,5 @@
 library(tidyverse)
+library(pROC)
 
 prepare_data <- function(data, outcome){
   #' Dummy data and impute missing values for supplied data set, subdividing into test and train set.
@@ -54,10 +55,31 @@ model_roc <- function(data, model){
     outcome,
     predict(model, data, type="prob")
   )
-  result <- twoClassSummary(outcome, lev=c(FALSE, TRUE))
-  result["ROC"]
+  # result <- twoClassSummary(outcome, lev=c(FALSE, TRUE))
+  # result["ROC"]
+  
+  result <- outcome %>% roc("obs", "TRUE")
+  as.numeric(result$auc)
 }
 
+# {
+#   data <- aSAH
+#   data$y <- aSAH$outcome
+#   model <- build_model(data)
+#   outcome <- data.frame(
+#     obs = data[,"y"],
+#     pred = predict(model, data)
+#   )
+#   outcome <- cbind(
+#     outcome,
+#     predict(model, data, type="prob")
+#   )
+#   outcome  
+#   twoClassSummary(outcome, lev=c(FALSE, TRUE))
+#   
+#   
+# }
+# outcome %>% head()
 
 missing_mine <- function(data, method="rpart"){
   #' Analyze each column of a data set that has missing values for patterns of missingness.
@@ -67,11 +89,12 @@ missing_mine <- function(data, method="rpart"){
   #' 
   #' @return Vector of ROC values.  Values greater than 0.5 imply some predictve power.
   #' @export
+  
+  results <- blank_result(data)
   is.singular <- apply(data, 2, function(i) length(unique(i)) == 1)
   data <- data[!is.singular]
   any_missing <- apply(is.missing(data), 2, any)
   missing_frame <- data[any_missing]
-  results <- blank_result(data)
 
   for (name in names(missing_frame)){
     test.train <- prepare_data(data, name)
