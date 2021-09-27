@@ -64,7 +64,7 @@ model_roc <- function(data, model){
 
 # {
 #   data <- aSAH
-#   data$y <- aSAH$outcome
+#   data$y <- as.factor(aSAH$outcome == "Good")
 #   model <- build_model(data)
 #   outcome <- data.frame(
 #     obs = data[,"y"],
@@ -74,10 +74,10 @@ model_roc <- function(data, model){
 #     outcome,
 #     predict(model, data, type="prob")
 #   )
-#   outcome  
-#   twoClassSummary(outcome, lev=c(FALSE, TRUE))
+#   outcome
 #   
-#   
+#   model_roc(data, model)
+# 
 # }
 # outcome %>% head()
 
