@@ -30,7 +30,8 @@ data.quality.app <- function(data, group_var){
     
     sidebarLayout(
       sidebarPanel(
-          radioButtons("Col1", "Col1", col.options)
+          radioButtons("Col1", "Col1", col.options),
+          radioButtons("plot_f", "Scale function", c("Linear", "Log"))
       ),
       mainPanel(
         plotOutput("output")
@@ -50,11 +51,25 @@ data.quality.app <- function(data, group_var){
       
       rownames(dq.data) <- dq.data[,1]
       
-      dq.data[,-1] %>% reshape2::melt() %>% 
-        mutate(value=as.numeric(value)) %>% 
-        ggplot(aes(x=Var1, y=value, color=Var2)) + geom_point(size=3) + 
-        geom_line(linetype="dashed", size=1.0) + 
-        ylim(0, 1) + xlab("") + ylab("Ratio")
+      melted <- dq.data[,-1] %>% reshape2::melt() %>% 
+        mutate(value = as.numeric(value))
+      
+      p <- melted %>% ggplot(aes(x=Var1, y=value, color=Var2)) + 
+        geom_point(size=3) +geom_line(linetype="dashed", size=1.0) + 
+        ylim(0, 1) + xlab("") + ylab("Ratio") 
+      
+      if (input$plot_f == "Linear"){
+        return(p)
+      }
+      else{
+        min_ <- min(melted$value[melted$value > 0])
+        max_ <- max(melted$value)
+        
+        limits <- c(0.001, 1)
+        p <- p + scale_y_continuous(trans="log10", limits=limits)
+          
+        return(p)
+      }
     })
   }
   
@@ -62,4 +77,15 @@ data.quality.app <- function(data, group_var){
   shinyApp(ui = ui, server = server)
 }
 
+ChickWeight %>% data.quality.app(Diet)
 
+grouped <- ChickWeight %>% group_by(Diet)
+dq.data <- grouped %>% 
+  select(weight) %>%  group_map(summary.vector) %>% 
+  do.call(rbind, .)
+
+rownames(dq.data) <- dq.data[,1]
+
+melted <- dq.data[,-1] %>% reshape2::melt() %>% 
+  mutate(value = as.numeric(value))
+melted
