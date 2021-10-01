@@ -51,6 +51,7 @@ data.quality.app <- function(data, group_var){
       rownames(dq.data) <- dq.data[,1]
       
       dq.data[,-1] %>% reshape2::melt() %>% 
+        mutate(value=as.numeric(value)) %>% 
         ggplot(aes(x=Var1, y=value, color=Var2)) + geom_point(size=3) + 
         geom_line(linetype="dashed", size=1.0) + 
         ylim(0, 1) + xlab("") + ylab("Ratio")
