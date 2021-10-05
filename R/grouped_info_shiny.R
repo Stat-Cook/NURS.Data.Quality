@@ -31,7 +31,8 @@ grouped.info.app <- function(data, group_var){
         fluidRow(
           column(6, radioButtons("Col1", "Col1", col.options)),
           column(6, radioButtons("Col2", "Col2", col.options))
-        )
+        ),
+        radioButtons("scale", "Scale function", c("Linear", "Log"))
       ),
       
       mainPanel(
@@ -49,26 +50,38 @@ grouped.info.app <- function(data, group_var){
       Col1 <- input$Col1
       Col2 <- input$Col2  
       
-      info <- grouped %>% group_map(column_info_func(input$Col1, input$Col2)) %>% 
-        do.call(rbind, .)
+      info <- grouped %>% group_map(column_info_func(Col1, Col2)) %>%
+        do.call(rbind, .)%>% round(5)
+      # 
+      # ref1 <- grouped %>% group_map(column_info_func(input$Col1, input$Col1)) %>% 
+      #   do.call(rbind, .)
+      # 
+      # ref2 <- grouped %>% group_map(column_info_func(input$Col2, input$Col2)) %>% 
+      #   do.call(rbind, .)
       
-      ref1 <- grouped %>% group_map(column_info_func(input$Col1, input$Col1)) %>% 
-        do.call(rbind, .)
-      
-      ref2 <- grouped %>% group_map(column_info_func(input$Col2, input$Col2)) %>% 
-        do.call(rbind, .)
-      
-      info <- cbind(info, info[,2] / ref1[,2], info[,2] / ref2[,2] )
+      # info <- cbind(info, info[,2] / ref1[,2], info[,2] / ref2[,2] )
+      # rownames(info) <- info[,1]
+      # colnames(info)[c(3,4)] <- c(
+      #   glue("{Col2} on {Col1}"),
+      #   glue("{Col1} on {Col2}")
+      # )
+      info <- cbind(info[,1], info[,3] / info[,2], info[,3] / info[,5])
       rownames(info) <- info[,1]
-      colnames(info)[c(3,4)] <- c(
-        glue("{Col2} on {Col1}"), 
+      
+      colnames(info)[2:3] <- c(
+        glue("{Col2} on {Col1}"),
         glue("{Col1} on {Col2}")
       )
-
-      info[,c(3,4)] %>% reshape2::melt() %>% 
+      p <- info[,2:3] %>% reshape2::melt() %>% 
         ggplot(aes(x=Var1, y=value, color=Var2)) + 
         xlab("") + ylab("Information") + 
         geom_line(size=2) + ylim(0, 1)
+      
+      if (input$scale == "Log"){
+        p <- p + scale_y_continuous(trans = "log10", limits= c(1e-2, 1))
+      }
+      
+      p
 
     })
   }
