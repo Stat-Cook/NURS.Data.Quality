@@ -19,7 +19,7 @@ grouped.info.app <- function(data, group_var){
   nbins <- sqrt(nrow(data))
   disc.df <- discrete.data(data, nbins=50)
   
-  grouped <- disc.df %>% group_by({{ group_var }})
+  grouped <- disc.df %>% group_by(data[group_var])
   col.options <- data %>% select(-{{ group_var }}) %>% colnames()
   
   ui <- fluidPage(
