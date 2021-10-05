@@ -12,12 +12,24 @@ summary.vector <- function(values, ...){
   c(
     unlist(args),
     `Missing ratio` = mean(values %in% MISSING_TYPES),
-    `Classes ratio` = tablen / len,
-    `Most common class` = tabmax / len
+    `Average Class size` = tablen / len,
+    `Most common ratio` = tabmax / len
   )
 }
 
-
+summary.vector.2 <- function(values, ...){
+  #' @export
+  args <- c(...)
+  values <- unlist(values)
+  len <- length(values)
+  tab <- table(values)
+  tablen <- length(tab)
+  tabmax <- max(tab)
+  c(
+    unlist(args),
+    "Most common" = names(which.max(tab))
+  )
+}
 
 data.quality.app <- function(data, group_var){
   #' @export
@@ -34,7 +46,8 @@ data.quality.app <- function(data, group_var){
           radioButtons("plot_f", "Scale function", c("Linear", "Log"))
       ),
       mainPanel(
-        plotOutput("output")
+        plotOutput("output"),
+        tableOutput("table")
       )
     )
   )
@@ -71,21 +84,35 @@ data.quality.app <- function(data, group_var){
         return(p)
       }
     })
+    
+    output$table <- renderTable({
+      Col <- input$Col1
+      
+      grouped %>% 
+        select(Col) %>%  group_map(summary.vector.2) %>% 
+        do.call(rbind, .)
+    })
   }
   
   # Run the application 
   shinyApp(ui = ui, server = server)
 }
-
-ChickWeight %>% data.quality.app(Diet)
-
-grouped <- ChickWeight %>% group_by(Diet)
-dq.data <- grouped %>% 
-  select(weight) %>%  group_map(summary.vector) %>% 
-  do.call(rbind, .)
-
-rownames(dq.data) <- dq.data[,1]
-
-melted <- dq.data[,-1] %>% reshape2::melt() %>% 
-  mutate(value = as.numeric(value))
-melted
+# 
+# ChickWeight %>% data.quality.app(Diet)
+# 
+# grouped <- ChickWeight %>% group_by(Diet)
+# dq.data <- grouped %>% 
+#   select(weight) %>%  group_map(summary.vector) %>% 
+#   do.call(rbind, .)
+# 
+# grouped %>% 
+#   select(weight) %>%  
+#   group_map(summary.vector.2)
+# 
+# 
+# ChickWeight$Time
+# rownames(dq.data) <- dq.data[,1]
+# 
+# melted <- dq.data[,-1] %>% reshape2::melt() %>% 
+#   mutate(value = as.numeric(value))
+# melted
