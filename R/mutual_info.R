@@ -73,7 +73,7 @@ column_info_func <- function(col1, col2){
   #' 
   f <- function(data, ...){
     args <- c(...)
-    c(unlist(args), infotheo::mutinformation(data[col1], data[col2]))
+    c(unlist(args), infotheo::mutinformation(data[,c(col1, col2)]))
   }
   f
 }
