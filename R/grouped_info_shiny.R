@@ -2,7 +2,51 @@ library(shiny)
 library(tidyverse)
 library(glue)
 
-grouped.info.app <- function(data, group_var){
+grouped.info <- function(data, group_var, Col1, Col2, scale="Linear"){
+  #' Produces a plot of mutual information between two columns as a function 
+  #' of a third variable, i.e. x = group_var, y = mutinfo(Col1, Col2).
+  #' 
+  #' @param data Data frame to be analyzed
+  #' @param group_var The variable to group data by.  Acts as the x-axis in the plot.
+  #' @param Col1 A column of data to use for mutual information.
+  #' @param Col2 A column of data to use for mutual information
+  #' @param scale Scale type for y-axis - choice of 'Linear' or 'Log' 
+  #' 
+  #' @return A ggplot object.
+  #' 
+  #' @export
+  nbins <- sqrt(nrow(data))
+  disc.df <- discrete.data(data, nbins=50)
+  grouped <- disc.df %>% group_by(data[group_var])
+  
+  grouped.info.plot(grouped, Col1, Col2, scale)
+}
+
+grouped.info.plot <- function(grouped, Col1, Col2, scale="Linear"){
+  #' @export
+  info <- grouped %>% group_map(column_info_func(Col1, Col2)) %>%
+    do.call(rbind, .)%>% round(5)
+  
+  info <- cbind(info[,1], info[,3] / info[,2], info[,3] / info[,5])
+  rownames(info) <- info[,1]
+  
+  colnames(info)[2:3] <- c(
+    glue("{Col2} on {Col1}"),
+    glue("{Col1} on {Col2}")
+  )
+  p <- info[,2:3] %>% reshape2::melt() %>% 
+    ggplot(aes(x=Var1, y=value, color=Var2)) + 
+    xlab("") + ylab("Information") + 
+    geom_line(size=2) + ylim(0, 1) +labs(color="")
+  
+  if (scale == "Log"){
+    p <- p + scale_y_continuous(trans = "log10", limits= c(1e-2, 1))
+  }
+  
+  p
+}
+
+grouped.info.app <- function(data, group_var, discrete_bins=50){
   #' Interactive app for tracking mutual info.
   #'
   #' @param data The data set to calculate mutual info from
@@ -16,9 +60,12 @@ grouped.info.app <- function(data, group_var){
   #' 
   #' @export
 
+  data.name <- substitute(data)
   nbins <- sqrt(nrow(data))
-  disc.df <- discrete.data(data, nbins=50)
-  
+
+  disc.df <- data %>% replace_na() %>% discrete.data(nbins=discrete_bins)
+  active <- rstudioapi::getSourceEditorContext()$path
+    
   grouped <- disc.df %>% group_by(data[group_var])
   col.options <- data %>% select(-{{ group_var }}) %>% colnames()
   
@@ -28,6 +75,7 @@ grouped.info.app <- function(data, group_var){
     
     sidebarLayout(
       sidebarPanel(
+        actionButton("do.output", "Send plot function to clipboard"),
         fluidRow(
           column(6, radioButtons("Col1", "Col1", col.options)),
           column(6, radioButtons("Col2", "Col2", col.options))
@@ -42,47 +90,19 @@ grouped.info.app <- function(data, group_var){
   )
   
   server <- function(input, output) {
-
+    observeEvent(input$do.output, {
+    
+      text <- glue("{data.name} %>% grouped.info(
+                      '{group_var}', '{input$Col1}', '{input$Col2}', '{input$scale}'
+                   )")
+      writeClipboard(text)
+    })
 
         
     output$output <- renderPlot({
-      
       Col1 <- input$Col1
       Col2 <- input$Col2  
-      
-      info <- grouped %>% group_map(column_info_func(Col1, Col2)) %>%
-        do.call(rbind, .)%>% round(5)
-      # 
-      # ref1 <- grouped %>% group_map(column_info_func(input$Col1, input$Col1)) %>% 
-      #   do.call(rbind, .)
-      # 
-      # ref2 <- grouped %>% group_map(column_info_func(input$Col2, input$Col2)) %>% 
-      #   do.call(rbind, .)
-      
-      # info <- cbind(info, info[,2] / ref1[,2], info[,2] / ref2[,2] )
-      # rownames(info) <- info[,1]
-      # colnames(info)[c(3,4)] <- c(
-      #   glue("{Col2} on {Col1}"),
-      #   glue("{Col1} on {Col2}")
-      # )
-      info <- cbind(info[,1], info[,3] / info[,2], info[,3] / info[,5])
-      rownames(info) <- info[,1]
-      
-      colnames(info)[2:3] <- c(
-        glue("{Col2} on {Col1}"),
-        glue("{Col1} on {Col2}")
-      )
-      p <- info[,2:3] %>% reshape2::melt() %>% 
-        ggplot(aes(x=Var1, y=value, color=Var2)) + 
-        xlab("") + ylab("Information") + 
-        geom_line(size=2) + ylim(0, 1)
-      
-      if (input$scale == "Log"){
-        p <- p + scale_y_continuous(trans = "log10", limits= c(1e-2, 1))
-      }
-      
-      p
-
+      grouped.info.plot(grouped, Col1, Col2, input$scale)
     })
   }
   
@@ -90,28 +110,9 @@ grouped.info.app <- function(data, group_var){
   shinyApp(ui = ui, server = server)
 }
 
-
-# grouped.info.plot(ChickWeight, Diet)
+# grouped.info.app(ChickWeight, "Diet")
 # 
-# ChickWeight$x1 <- rnorm(nrow(ChickWeight))
-# ChickWeight$x2 <- as.numeric(ChickWeight$x1 + rnorm(nrow(ChickWeight), 0, 0.05) > 0)
 # 
-# grouped <- ChickWeight %>% group_by(Diet)#  %>%  grouped.info.plot()
-# colnames(ChickWeight)
-# Col1 <- "Time"
-# Col2 <- "weight"
-# info <- grouped %>% group_map(column_info_func(Col1, Col2)) %>% 
-#   do.call(rbind, .)
-# 
-# ref1 <- grouped %>% group_map(column_info_func(Col1, Col1)) %>% 
-#   do.call(rbind, .)
-# 
-# ref2 <- grouped %>% group_map(column_info_func(Col2, Col2)) %>% 
-#   do.call(rbind, .)
-# info <- cbind(info, info[,2] / ref1[,2], info[,2] / ref2[,2] )
-# rownames(info) <- info[,1]
-# colnames(info)[c(3,4)] <- c("A on B", "B on A")
-# reshape2::melt(info[,c(3,4)]) %>% ggplot(aes(x=Var1, y=value, color=Var2)) + 
-#   geom_line() + ylim(0, 1)
-
-
+# ChickWeight %>% grouped.info.function(
+#   'Diet', 'Time', 'x1', 'Linear'
+# )
