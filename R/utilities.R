@@ -25,3 +25,18 @@ apply_to_dataframe <- function(data, column_function){
   }
   result
 }
+
+
+
+unique2clipboard <- function(values, column_name = NA){
+  #' Send values to clipboard
+  #' 
+  #' Finds all unique values of the vector given, concatenates with new lines and 
+  #' sends to the clipboard.  Can be pasted into excel as a column.
+  #' 
+  #' @param values A vector of values to be processed
+  #'
+  uni <- unique(values)
+  string <- paste(uni, collapse="\n")
+  writeClipboard(string)
+}
