@@ -33,7 +33,7 @@ summary.vector.2 <- function(values, ...){
 
 data.quality.app <- function(data, group_var){
   #' @export
-  grouped <- data %>% group_by({{ group_var }})
+  grouped <- data %>% group_by(data[group_var])
   col.options <- data %>% select(-{{ group_var }}) %>% colnames()
   
   ui <- fluidPage(
@@ -97,22 +97,3 @@ data.quality.app <- function(data, group_var){
   # Run the application 
   shinyApp(ui = ui, server = server)
 }
-# 
-# ChickWeight %>% data.quality.app(Diet)
-# 
-# grouped <- ChickWeight %>% group_by(Diet)
-# dq.data <- grouped %>% 
-#   select(weight) %>%  group_map(summary.vector) %>% 
-#   do.call(rbind, .)
-# 
-# grouped %>% 
-#   select(weight) %>%  
-#   group_map(summary.vector.2)
-# 
-# 
-# ChickWeight$Time
-# rownames(dq.data) <- dq.data[,1]
-# 
-# melted <- dq.data[,-1] %>% reshape2::melt() %>% 
-#   mutate(value = as.numeric(value))
-# melted
