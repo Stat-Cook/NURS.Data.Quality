@@ -18,7 +18,7 @@ compare_frequencies <- function(values, limit=0.8){
   #'  
   #'  @return Boolean 
   #' @export
-
+  
   freq <- table(values)
   any(freq > limit*sum(freq))
 }
