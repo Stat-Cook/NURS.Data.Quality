@@ -3,7 +3,7 @@ compare_functions <- function(value){
   #' 
   #' @param value 
   #' 
-  #' @return  validation function
+  #' @return Validation function
   #' @export
   #' 
   if (value[1] == "Numeric"){
