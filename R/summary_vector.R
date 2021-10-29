@@ -2,6 +2,16 @@ library(tidyverse)
 library(shiny)
 
 summary.vector <- function(values, ...){
+  #' Calculates data quality metrics for a vector.  
+  #' 
+  #' Calculates a series of quality metrics where values approaching 1 
+  #' indicate data quality issues.   The three metrics are:
+  #' `Missing Ratio`: rate of missing observations.
+  #' `Average Class Size`: The number of classes / the number of observations
+  #' `Most common ratio`: Level of data represeted by the modal class.
+  #'
+  #' @param values 
+  #' 
   #' @export
   args <- c(...)
   values <- unlist(values)
@@ -32,6 +42,15 @@ summary.vector.2 <- function(values, ...){
 }
 
 data.quality.app <- function(data, group_var){
+  #' R shiny app for visualizing data quality patterns
+  #' 
+  #' Visualizes data quality metrics for  a data set as a function of 
+  #' a grouping variable.  The gouping variable can be set as required though 
+  #' using a temporal or geographical factor is advised.
+  #' 
+  #' @param data Data frame of observations to check for DQ.
+  #' @param group_var Variable to visualized data quality as a function of.
+  #' 
   #' @export
   grouped <- data %>% group_by(data[group_var])
   col.options <- data %>% select(-{{ group_var }}) %>% colnames()
@@ -68,7 +87,7 @@ data.quality.app <- function(data, group_var){
         mutate(value = as.numeric(value))
       
       p <- melted %>% ggplot(aes(x=Var1, y=value, color=Var2)) + 
-        geom_point(size=3) +geom_line(linetype="dashed", size=1.0) + 
+        geom_point(size=3) + geom_line(linetype="dashed", size=1.0) + 
         ylim(0, 1) + xlab("") + ylab("Ratio") 
       
       if (input$plot_f == "Linear"){
