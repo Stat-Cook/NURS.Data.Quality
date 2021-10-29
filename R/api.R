@@ -6,6 +6,11 @@ data.quality <- function(data) {
   #' @param data Data frame to perform data quality checks on.
   #' 
   #' @return Data frame summarizing data quality metrics.
+  #' 
+  #' @example 
+  #' data.quality(ChickWeight)
+  #' 
+  #' @importFrom tibble tibble
   #' @export
   tibble(
     Variable = colnames(data),
@@ -20,7 +25,7 @@ data.quality <- function(data) {
 start_mutual_info_app <- function(){
   #' Start app for visualizing mutual info
   #' 
-  #' 
+  #' TODO: remap so works on install.
   #' 
   #' @export
 
