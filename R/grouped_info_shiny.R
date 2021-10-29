@@ -58,6 +58,8 @@ grouped.info.app <- function(data, group_var, discrete_bins=50){
   #' @example 
   #' grouped.info.plot(ChickWeight, Diet)
   #' 
+  #' @importFrom magrittr "%>%"
+  #' 
   #' @export
 
   data.name <- substitute(data)
@@ -65,8 +67,9 @@ grouped.info.app <- function(data, group_var, discrete_bins=50){
 
   disc.df <- data %>% replace_na() %>% discrete.data(nbins=discrete_bins)
   active <- rstudioapi::getSourceEditorContext()$path
-    
-  grouped <- disc.df %>% group_by(data[group_var])
+  
+  disc.df$grouper <-  data[group_var]
+  grouped <- disc.df %>% group_by(grouper)
   col.options <- data %>% select(-{{ group_var }}) %>% colnames()
   
   ui <- fluidPage(
