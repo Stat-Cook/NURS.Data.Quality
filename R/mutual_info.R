@@ -30,28 +30,32 @@ discrete.data <- function(data, ...){
   infotheo::discretize(copied, ...)
 }
 
-mutual_info <- function(data){
+mutual_info <- function(data, ...){
   #' Calculate mutual information between pairs of variables in a data frame
+  #' 
+  #' TODO: replace uses with infotheo::mutinformation.
   #' 
   #' @param data Data frame (n by k) of observations
   #' 
   #' @return matrix (k by k) of mutual information.  Diagonal represents total information a varaible has.
   #' @export
-  disc.df <- discrete.data(data)
-  K <- dim(data)[2]
+  disc.df <- discrete.data(data, ...)
+  # K <- dim(data)[2]
+  # 
+  # info <- sapply(
+  #   1:K, 
+  #   function(i) sapply(
+  #     1:K, 
+  #     function(j) infotheo::multiinformation(disc.df[,c(i,j)])
+  #   )
+  # )
+  # 
+  # rownames(info) <- colnames(data)
+  # colnames(info) <- colnames(data)
+  # 
+  # info
   
-  info <- sapply(
-    1:K, 
-    function(i) sapply(
-      1:K, 
-      function(j) infotheo::multiinformation(disc.df[,c(i,j)])
-    )
-  )
-  
-  rownames(info) <- colnames(data)
-  colnames(info) <- colnames(data)
-  
-  info
+  infotheo::mutinformation(disc.df)
 }
 
 column_info_func <- function(col1, col2){
