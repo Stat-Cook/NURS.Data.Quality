@@ -41,17 +41,55 @@ summary.vector.2 <- function(values, ...){
   )
 }
 
+data.quality.plot <- function(grouped, col, scale="linear"){
+  dq.data <- grouped %>% 
+    select(col) %>%  group_map(summary.vector) %>% 
+    do.call(rbind, .)
+  
+  rownames(dq.data) <- dq.data[,1]
+  
+  melted <- dq.data[,-1] %>% reshape2::melt() %>% 
+    mutate(value = as.numeric(value))
+  
+  p <- melted %>% ggplot(aes(x=Var1, y=value, color=Var2)) + 
+    geom_point(size=3) + geom_line(linetype="dashed", size=1.0) + 
+    ylim(0, 1) + xlab("") + ylab("Ratio") 
+  
+  if (tolower(scale) == "linear"){
+    return(p)
+  }
+  else{
+    min_ <- min(melted$value[melted$value > 0])
+    max_ <- max(melted$value)
+    
+    limits <- c(0.001, 1)
+    p <- p + scale_y_continuous(trans="log10", limits=limits)
+    
+    return(p)
+  }
+}
+
+
+data.quality.function <- function(data, group_var, Col, scale="Linear"){
+  grouped <- data %>% group_by(data[group_var])
+  data.quality.plot(grouped, Col, scale)
+}
+
+
 data.quality.app <- function(data, group_var){
   #' R shiny app for visualizing data quality patterns
   #' 
   #' Visualizes data quality metrics for  a data set as a function of 
-  #' a grouping variable.  The gouping variable can be set as required though 
+  #' a grouping variable.  The grouping variable can be set as required though 
   #' using a temporal or geographical factor is advised.
   #' 
   #' @param data Data frame of observations to check for DQ.
   #' @param group_var Variable to visualized data quality as a function of.
   #' 
   #' @export
+  #'
+  data.name <- substitute(data)
+  
   grouped <- data %>% group_by(data[group_var])
   col.options <- data %>% select(-{{ group_var }}) %>% colnames()
   
@@ -61,6 +99,7 @@ data.quality.app <- function(data, group_var){
     
     sidebarLayout(
       sidebarPanel(
+          actionButton("do.output", "Send plot function to clipboard"),
           radioButtons("Col1", "Col1", col.options),
           radioButtons("plot_f", "Scale function", c("Linear", "Log"))
       ),
@@ -72,6 +111,14 @@ data.quality.app <- function(data, group_var){
   )
   
   server <- function(input, output) {
+    
+    observeEvent(input$do.output, {
+      
+      text <- glue("{data.name} %>% data.quality.function(
+                      '{group_var}', '{input$Col1}', '{input$scale}'
+                   )")
+      writeClipboard(text)
+    })
     
     output$output <- renderPlot({
       
