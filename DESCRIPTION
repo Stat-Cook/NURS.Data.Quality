@@ -4,11 +4,19 @@ Version: 0.1
 Authors@R: person("Robert", "Cook", email = "first.last@example.com",
                   role = c("aut", "cre"))
 Description: Data quality measures for the NURS project
-Depends: R (>= 3.1.0)
+Depends: R (>= 3.1.0),
+  pROC,
+  caret,
+  tidyverse,
+  glue,
+  shiny
 License: GPL
 LazyData: true
-Imports: infotheo, 
-  tidyverse
+Imports: 
+  infotheo
 Suggests: 
+    rmarkdown,
+    knitr,
     testthat
 RoxygenNote: 7.1.2
+VignetteBuilder: knitr
