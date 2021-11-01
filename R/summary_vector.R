@@ -162,10 +162,3 @@ data.quality.app <- function(data, group_var){
   # Run the application 
   shinyApp(ui = ui, server = server)
 }
-
-data.quality.app(ChickWeight, "Diet")
-ChickWeight %>% data.quality.function(
-  'Diet', 'Time', 'Linear'
-)
-
-asbc
