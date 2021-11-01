@@ -2,7 +2,7 @@ library(shiny)
 library(tidyverse)
 library(glue)
 
-grouped.info <- function(data, group_var, Col1, Col2, scale="Linear"){
+grouped.info.function <- function(data, group_var, Col1, Col2, scale="Linear"){
   #' Produces a plot of mutual information between two columns as a function 
   #' of a third variable, i.e. x = group_var, y = mutinfo(Col1, Col2).
   #' 
@@ -95,7 +95,7 @@ grouped.info.app <- function(data, group_var, discrete_bins=50){
   server <- function(input, output) {
     observeEvent(input$do.output, {
     
-      text <- glue("{data.name} %>% grouped.info(
+      text <- glue("{data.name} %>% grouped.info.function(
                       '{group_var}', '{input$Col1}', '{input$Col2}', '{input$scale}'
                    )")
       writeClipboard(text)
