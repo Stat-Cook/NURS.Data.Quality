@@ -101,7 +101,7 @@ data.quality.app <- function(data, group_var){
       sidebarPanel(
           actionButton("do.output", "Send plot function to clipboard"),
           radioButtons("Col1", "Col1", col.options),
-          radioButtons("plot_f", "Scale function", c("Linear", "Log"))
+          radioButtons("scale", "Scale function", c("Linear", "Log"))
       ),
       mainPanel(
         plotOutput("output"),
@@ -113,7 +113,6 @@ data.quality.app <- function(data, group_var){
   server <- function(input, output) {
     
     observeEvent(input$do.output, {
-      
       text <- glue("{data.name} %>% data.quality.function(
                       '{group_var}', '{input$Col1}', '{input$scale}'
                    )")
@@ -137,7 +136,7 @@ data.quality.app <- function(data, group_var){
         geom_point(size=3) + geom_line(linetype="dashed", size=1.0) + 
         ylim(0, 1) + xlab("") + ylab("Ratio") 
       
-      if (input$plot_f == "Linear"){
+      if (input$scale == "Linear"){
         return(p)
       }
       else{
@@ -163,3 +162,10 @@ data.quality.app <- function(data, group_var){
   # Run the application 
   shinyApp(ui = ui, server = server)
 }
+
+data.quality.app(ChickWeight, "Diet")
+ChickWeight %>% data.quality.function(
+  'Diet', 'Time', 'Linear'
+)
+
+asbc
