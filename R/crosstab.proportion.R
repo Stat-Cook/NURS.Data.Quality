@@ -20,7 +20,7 @@ crosstab.proportion <- function(data, target, group_var){
   joined <- grps %>% select({{target}}) %>% 
     group_map(proportions.frame) %>% reduce(full_join, by="name")
   joined.vals <- joined %>% select(-name)
-  colnames(joined.vals) <-  grps %>% select(A) %>% group_map(~ .y) %>% unlist()
+  colnames(joined.vals) <-  grps %>% select({{target}}) %>% group_map(~ .y) %>% unlist()
   rownames(joined.vals) <- joined$name
   
   joined.vals  %>% t()
