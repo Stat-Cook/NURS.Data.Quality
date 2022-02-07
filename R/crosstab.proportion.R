@@ -1,27 +1,15 @@
-proportions.frame <- function(values, ...){
-  #' 
-  #'
-  #'
-  values <- unlist(values)
-  uni <- unique(values)
-  results <- c()
-  for (i in uni){
-    results <- c(results, mean(values == i))
-  }
-  
-  frame <- data.frame(value = 100*results, name=uni)
-  frame
-}
-
 crosstab.proportion <- function(data, target, group_var){
+  #' Calculate cross tab and row proportions between two variables.
+  #' 
+  #' @param target Variable to calculate proportions of.
+  #' @param group_var Variable to group data by. 
   #'
   #' @export
-  grps <- data %>% group_by({{group_var}})
-  joined <- grps %>% select({{target}}) %>% 
-    group_map(proportions.frame) %>% reduce(full_join, by="name")
-  joined.vals <- joined %>% select(-name)
-  colnames(joined.vals) <-  grps %>% select({{target}}) %>% group_map(~ .y) %>% unlist()
-  rownames(joined.vals) <- joined$name
+  target.string <- substitute(target)
+  group_var.string <- substitute(group_var)
+    
+  f <- formula(glue("~ {group_var.string} + {target.string}"))
   
-  joined.vals  %>% t()
+  proportions <- data %>% xtabs(f, data=.) %>% prop.table(1)
+  proportions %>% as.matrix() %>% as.data.frame.matrix()*100
 }
