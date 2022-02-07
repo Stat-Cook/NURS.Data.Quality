@@ -1,8 +1,6 @@
 blank_result <- function(data){
   #' Generate a blank result vector from a data frame
   #' 
-  #' 
-  #' 
   #' @param data The data frame to template the result vector from.
   #' @export
   #' 
