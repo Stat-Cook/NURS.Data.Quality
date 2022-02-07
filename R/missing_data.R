@@ -1,4 +1,4 @@
-MISSING_TYPES <- c(NA, "", " ", "NA", "nan")
+MISSING_TYPES <- c(NA, "", " ", "NA", "nan", "NULL", "Null", "null", "  /  /    ")
 
 is.missing <- function(values, missing_types=MISSING_TYPES){
   #' Vector function - identify which values are 'missing'
