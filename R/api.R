@@ -28,10 +28,10 @@ start_mutual_info_app <- function(){
   #' TODO: remap so works on install.
   #' 
   #' @export
-
-  # appDir <- system.file("app", "myapp", package = "mypackage")
-  # if (appDir == "") {
-  #   stop("Could not find example directory. Try re-installing `mypackage`.", call. = FALSE)
-  # }
-  shiny::runApp("Mutual_Info/app.R")
+  #' 
+  #' 
+  path <- system.file("shiny_apps", "Mututal_Info", "app.R",  
+    package="NURS.Data.Quality")
+  
+  shiny::runApp(path)
 }
