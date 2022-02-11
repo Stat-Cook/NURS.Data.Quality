@@ -2,7 +2,7 @@ blank_result <- function(data){
   #' Generate a blank result vector from a data frame
   #' 
   #' @param data The data frame to template the result vector from.
-
+  #' @noRd  
   K <- dim(data)[2]
   result <- rep(NA, K)
   names(result) <- colnames(data)
@@ -12,14 +12,40 @@ blank_result <- function(data){
 apply_to_dataframe <- function(data, column_function){
   #' Apply a function to every variable of a data frame.
   #' 
+  #' Maps a function down every variable of a data frame, returning a vector
+  #' of the result, keyed for the variable names.
+  #' 
   #' @param data Data Frame to be analyzed
   #' @param column_function Function to be applied to each varaible.
   #' 
+  #' @example 
+  #' 
+  #' apply_to_dataframe(ChickWeight, mean)
+  #' 
   #' @return Vector of results.
+  #' @noRd  
   result <- blank_result(data)
   for (name in names(result)){
     values <- data[,name]
     result[name] <- column_function(values)
   }
   result
+}
+
+unique2clipboard <- function(values, column_name = NA){
+  #' Send values to clipboard
+  #' 
+  #' Finds all unique values of the vector given, concatenates with new lines and 
+  #' sends to the clipboard.  Can be pasted into excel as a column.
+  #' 
+  #' @example 
+  #' 
+  #' unique2clipboard(ChickWeight$Diet)
+  #' 
+  #' @param values A vector of values to be processed
+  #'
+  #' @noRd  
+  uni <- unique(values)
+  string <- paste(uni, collapse="\n")
+  writeClipboard(string)
 }

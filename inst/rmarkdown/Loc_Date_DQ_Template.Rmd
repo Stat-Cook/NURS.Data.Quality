@@ -1,0 +1,130 @@
+---
+title: "Location and Date DQ Report"
+output: html_document
+params:
+  path: Temp
+  extra_missing_types: c()
+  location_variable: X1
+  date_variable: X2
+
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo=F, warning=F, message = F)
+```
+
+``` {r}
+library(tidyverse)
+library(recipes)
+library(lubridate)
+library(NURS.Data.Quality)
+
+
+```
+
+``` {r}
+data <- readRDS(params$path)
+missing <- c(MISSING_TYPES, "  /  /    ", "NULL", "null", "Null")
+
+date.feature <- data[[params$date_variable]]
+location.feature <- data[[params$location_variable]]
+```
+
+``` {r}
+missing.data <- data %>% select(-c(params$location_variable, params$date_variable)) %>%
+  is.missing(missing)
+missing.rates <- missing.data %>% apply(2, mean)
+
+missing.vars <- missing.rates[(missing.rates < 0.2) & (missing.rates > 0.001)] %>%
+  names()
+```
+
+``` {r}
+date.missing <- lapply(
+  missing.vars,
+  function(i) {
+    target <- data[[i]] %>% NURS.Data.Quality:::is.missing(missing)
+    result <- NURS.Data.Quality:::feature.fit(target, date.feature)
+  }
+)
+```
+
+``` {r}
+location.missing <- lapply(
+  missing.vars,
+  function(i) {
+    target <- data[[i]] %>% NURS.Data.Quality:::is.missing(missing)
+    NURS.Data.Quality:::feature.fit(target, location.feature)
+  }
+)
+```
+
+``` {r}
+l <- length(missing.vars)
+if ( l > 0){
+  frm <- data.frame(
+    Var = missing.vars,
+    DateROC = sapply(date.missing, function(i) i$AUC)%>% round(3),
+    LocROC = sapply(location.missing, function(i) i$AUC)%>% round(3)
+  )
+} else {
+  frm <- data.frame(
+    Var = NA,
+    DateROC = NA,
+    LocROC = NA
+  )
+}
+```
+
+``` {r}
+frm %>% knitr::kable(caption="ROC-AUC values for location and date models.")
+```
+
+``` {r}
+to.group <- function(values, result) {
+  values <- values %>% str_replace_all("`", "")
+  factor(result$naming_vector[values], levels = result$naming_vector)
+}
+
+
+generate_plot <- function(result, title=NA){
+  plotdata <- coef(result$model) %>% as.data.frame() %>%
+    mutate(Group = to.group(rownames(.), result))
+  ncol <- (1 + nrow(plotdata) %/% 16)
+  plotdata %>%
+    ggplot(aes(x=Group,  y=LD1, color=Group)) +
+    geom_point() + guides(color=guide_legend(ncol=ncol,byrow=FALSE)) +
+    theme(axis.title.x=element_blank(),
+                         axis.text.x=element_blank(),
+                         axis.ticks.x=element_blank()) +
+    labs(title = title)
+}
+
+```
+
+## `r params$date_variable` on Missing
+
+``` {r, fig.width=8}
+l <- length(missing.vars)
+if (l > 0){
+  plt <- purrr::map(
+    1:l,
+    function(i) generate_plot(date.missing[[i]], missing.vars[i]) %>%
+      print()
+  );
+}
+```
+
+## `r params$location_variable` on Missing
+
+``` {r, fig.width=12}
+
+if (l > 0){
+  plt <- purrr::map(
+    1:l,
+    function(i) generate_plot(location.missing[[i]], missing.vars[i]) %>%
+      print()
+  );
+}
+
+```

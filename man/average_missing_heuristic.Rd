@@ -14,7 +14,7 @@ average_missing_heuristic(data, limit = 0.1, missing_types = MISSING_TYPES)
 \item{missing_types}{[optional] vector of valuse to define as missing.}
 }
 \value{
-Boolean-vector - FALSE: missing more data than the limit.
+Boolean-vector - TRUE: missing more data than the limit.
 }
 \description{
 Check if missing data rate is less than set limit.

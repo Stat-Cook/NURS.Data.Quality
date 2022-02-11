@@ -1,0 +1,30 @@
+reference:
+  - title: "Report Funtions"
+    desc: >
+      Functions for generating automated DQ reports from local data sets.
+    contents:
+      - loc_date_DQ_report
+      - missing_DQ_report
+  - title: "Shiny apps"
+    desc: >
+      Function to ...
+    contents: 
+      - data.quality.app
+      - mutual.info.app 
+      - grouped.info.app
+      - grouped.info.function
+      - start_mutual_info_app 
+  - title: "Missing data functions"
+    desc: >
+      Function to ...
+    contents: 
+      - data.quality
+      - compare_frequencies
+      - compare_frame_frequencies
+      - compare_classes
+      - compare_frame_classes
+      - average_missing
+      - average_missing_heuristic
+      - missing_mine
+      
+      

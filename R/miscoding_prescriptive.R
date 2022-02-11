@@ -3,7 +3,8 @@ compare_functions <- function(value){
   #' 
   #' @param value 
   #' 
-  #' @return  validation function
+  #' @return Validation function
+  #' @noRd
   #' 
   if (value[1] == "Numeric"){
     return(is.numeric)    
@@ -25,6 +26,7 @@ compare <- function(data, col_name, validation){
   #' @param validation A list of validation types.
   #' 
   #' @return quantity of data that obeys validation rule,  valued [0, 1].
+  #' @noRd
   valid_set <- validation[[col_name]]
   valid_func <- compare_functions(valid_set)
   

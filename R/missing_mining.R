@@ -1,4 +1,5 @@
 library(tidyverse)
+library(pROC)
 
 prepare_data <- function(data, outcome){
   #' Dummy data and impute missing values for supplied data set, subdividing into test and train set.
@@ -7,6 +8,7 @@ prepare_data <- function(data, outcome){
   #' @param outcome The column of data frame to be treated as the outcome state.
   #' 
   #' @return list(train_data, test_data)
+  #' @noRd  
   y <- data[,outcome] %>% is.missing() %>% factor(levels=c(FALSE, TRUE))
   x <- data %>% select(-outcome)
 
@@ -33,6 +35,7 @@ build_model <- function(data, method="rpart"){
   #' @param method Method call from `carat::train` to use for binary-classication
   #' 
   #' @return `caret` model 
+  #' @noRd  
   caret::train(y ~ ., data=data, method=method)
 }
 
@@ -43,6 +46,7 @@ model_roc <- function(data, model){
   #' @param model `caret` model that has been pre-trained.
   #' 
   #' @return ROC value
+  #' @noRd  
   outcome <- data.frame(
     obs = data[,"y"],
     pred = predict(model, data)
@@ -51,10 +55,12 @@ model_roc <- function(data, model){
     outcome,
     predict(model, data, type="prob")
   )
-  result <- twoClassSummary(outcome, lev=c(FALSE, TRUE))
-  result["ROC"]
+  # result <- twoClassSummary(outcome, lev=c(FALSE, TRUE))
+  # result["ROC"]
+  
+  result <- outcome %>% roc("obs", "TRUE")
+  as.numeric(result$auc)
 }
-
 
 missing_mine <- function(data, method="rpart"){
   #' Analyze each column of a data set that has missing values for patterns of missingness.
@@ -63,9 +69,13 @@ missing_mine <- function(data, method="rpart"){
   #' @param method `caret::train` method to be applied.
   #' 
   #' @return Vector of ROC values.  Values greater than 0.5 imply some predictve power.
+  #' @export
+  
+  results <- blank_result(data)
+  is.singular <- apply(data, 2, function(i) length(unique(i)) == 1)
+  data <- data[!is.singular]
   any_missing <- apply(is.missing(data), 2, any)
   missing_frame <- data[any_missing]
-  results <- blank_result(data)
 
   for (name in names(missing_frame)){
     test.train <- prepare_data(data, name)
