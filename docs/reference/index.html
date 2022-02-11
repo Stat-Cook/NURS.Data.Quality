@@ -38,37 +38,58 @@
     </div>
 
     <table class="ref-index"><colgroup><col class="alias"><col class="title"></colgroup><tbody><tr><th colspan="2">
-          <h2 id="all-functions">All functions <a href="#all-functions" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p>
+          <h2 id="report-funtions">Report Funtions <a href="#report-funtions" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Functions for generating automated DQ reports from local data sets.</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="apply_to_dataframe.html">apply_to_dataframe()</a></code> </p>
+          <p><code><a href="loc_date_DQ_report.html">loc_date_DQ_report()</a></code> </p>
         </td>
-        <td><p>Apply a function to every variable of a data frame.</p></td>
+        <td><p>Automatically generate a RMD report of data quality issues.</p></td>
       </tr><tr><td>
-          <p><code><a href="average_missing.html">average_missing()</a></code> </p>
+          <p><code><a href="missing_DQ_report.html">missing_DQ_report()</a></code> </p>
         </td>
-        <td><p>Dataframe function - measure the average rate of missingness on a column</p></td>
+        <td><p>Automatically generate a RMD report of data quality issues.</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="shiny-apps">Shiny apps <a href="#shiny-apps" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Function to …</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="data.quality.app.html">data.quality.app()</a></code> </p>
+        </td>
+        <td><p>R shiny app for visualizing data quality patterns</p></td>
       </tr><tr><td>
-          <p><code><a href="average_missing_heuristic.html">average_missing_heuristic()</a></code> </p>
+          <p><code><a href="mutual.info.app.html">mutual.info.app()</a></code> </p>
         </td>
-        <td><p>Check if missing data rate is less than set limit.</p></td>
+        <td><p>Interactive app for tracking mutual info.</p></td>
       </tr><tr><td>
-          <p><code><a href="blank_result.html">blank_result()</a></code> </p>
+          <p><code><a href="grouped.info.app.html">grouped.info.app()</a></code> </p>
         </td>
-        <td><p>Generate a blank result vector from a data frame</p></td>
+        <td><p>Interactive app for tracking mutual info across a grouping varibale.</p></td>
       </tr><tr><td>
-          <p><code><a href="build_model.html">build_model()</a></code> </p>
+          <p><code><a href="grouped.info.function.html">grouped.info.function()</a></code> </p>
         </td>
-        <td><p>Constuct model via `caret` call</p></td>
+        <td><p>Internal wrapper to grouped.info.plot</p></td>
       </tr><tr><td>
-          <p><code><a href="column_info_func.html">column_info_func()</a></code> </p>
+          <p><code><a href="start_mutual_info_app.html">start_mutual_info_app()</a></code> </p>
         </td>
-        <td><p>Function factory for mutual information.</p></td>
+        <td><p>Start app for visualizing mutual info</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="missing-data-functions">Missing data functions <a href="#missing-data-functions" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Function to …</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="data.quality.html">data.quality()</a></code> </p>
+        </td>
+        <td><p>Data quality measures</p></td>
       </tr><tr><td>
-          <p><code><a href="compare.html">compare()</a></code> </p>
+          <p><code><a href="compare_frequencies.html">compare_frequencies()</a></code> </p>
         </td>
-        <td><p>Apply a comparison function to a column of data</p></td>
+        <td><p>Vector function - check that no single value of a 
+variable is used more than a set limit.</p></td>
+      </tr><tr><td>
+          <p><code><a href="compare_frame_frequencies.html">compare_frame_frequencies()</a></code> </p>
+        </td>
+        <td><p>Tests all variables in a data frame to check values aren't used too often.</p></td>
       </tr><tr><td>
           <p><code><a href="compare_classes.html">compare_classes()</a></code> </p>
         </td>
@@ -79,91 +100,17 @@
         <td><p>Check each variable of a data frame to determine if there are enough examples for the number of distinct values.  
 NB: will return a spurious result for continous valued variables.</p></td>
       </tr><tr><td>
-          <p><code><a href="compare_frame_frequencies.html">compare_frame_frequencies()</a></code> </p>
+          <p><code><a href="average_missing.html">average_missing()</a></code> </p>
         </td>
-        <td><p>Tests all variables in a data frame to check values aren't used too often.</p></td>
+        <td><p>Dataframe function - measure the average rate of missingness on a column</p></td>
       </tr><tr><td>
-          <p><code><a href="compare_frequencies.html">compare_frequencies()</a></code> </p>
+          <p><code><a href="average_missing_heuristic.html">average_missing_heuristic()</a></code> </p>
         </td>
-        <td><p>Vector function - check that no single value of a 
-variable is used more than a set limit.</p></td>
-      </tr><tr><td>
-          <p><code><a href="compare_functions.html">compare_functions()</a></code> </p>
-        </td>
-        <td><p>Determines which function to use for validation</p></td>
-      </tr><tr><td>
-          <p><code><a href="crosstab.proportion.html">crosstab.proportion()</a></code> </p>
-        </td>
-        <td><p>Calculate cross tab and row proportions between two variables.</p></td>
-      </tr><tr><td>
-          <p><code><a href="data.quality.app.html">data.quality.app()</a></code> </p>
-        </td>
-        <td><p>R shiny app for visualizing data quality patterns</p></td>
-      </tr><tr><td>
-          <p><code><a href="data.quality.html">data.quality()</a></code> </p>
-        </td>
-        <td><p>Data quality measures</p></td>
-      </tr><tr><td>
-          <p><code><a href="discrete.data.html">discrete.data()</a></code> </p>
-        </td>
-        <td><p>Discretize data after encoding factors</p></td>
-      </tr><tr><td>
-          <p><code><a href="encode_values.html">encode_values()</a></code> </p>
-        </td>
-        <td><p>Perform a label encoding on a categorical varaible.</p></td>
-      </tr><tr><td>
-          <p><code><a href="grouped.info.app.html">grouped.info.app()</a></code> </p>
-        </td>
-        <td><p>Interactive app for tracking mutual info.</p></td>
-      </tr><tr><td>
-          <p><code><a href="grouped.info.function.html">grouped.info.function()</a></code> </p>
-        </td>
-        <td><p>Produces a plot of mutual information between two columns as a function 
-of a third variable, i.e. x = group_var, y = mutinfo(Col1, Col2).</p></td>
-      </tr><tr><td>
-          <p><code><a href="is.missing.html">is.missing()</a></code> </p>
-        </td>
-        <td><p>Vector function - identify which values are 'missing'</p></td>
-      </tr><tr><td>
-          <p><code><a href="loc_date_DQ_report.html">loc_date_DQ_report()</a></code> </p>
-        </td>
-        <td><p>Automatically generate a RMD report of data quality issues.</p></td>
-      </tr><tr><td>
-          <p><code><a href="missing_DQ_report.html">missing_DQ_report()</a></code> </p>
-        </td>
-        <td><p>Automatically generate a RMD report of data quality issues.</p></td>
+        <td><p>Check if missing data rate is less than set limit.</p></td>
       </tr><tr><td>
           <p><code><a href="missing_mine.html">missing_mine()</a></code> </p>
         </td>
         <td><p>Analyze each column of a data set that has missing values for patterns of missingness.</p></td>
-      </tr><tr><td>
-          <p><code><a href="model_roc.html">model_roc()</a></code> </p>
-        </td>
-        <td><p>Calculates model quality via ROC AUC.</p></td>
-      </tr><tr><td>
-          <p><code><a href="mutual_info.html">mutual_info()</a></code> </p>
-        </td>
-        <td><p>Calculate mutual information between pairs of variables in a data frame</p></td>
-      </tr><tr><td>
-          <p><code><a href="prepare_data.html">prepare_data()</a></code> </p>
-        </td>
-        <td><p>Dummy data and impute missing values for supplied data set, subdividing into test and train set.</p></td>
-      </tr><tr><td>
-          <p><code><a href="sqrt_comparison.html">sqrt_comparison()</a></code> </p>
-        </td>
-        <td><p>Function for comparing two values.</p></td>
-      </tr><tr><td>
-          <p><code><a href="start_mutual_info_app.html">start_mutual_info_app()</a></code> </p>
-        </td>
-        <td><p>Start app for visualizing mutual info</p></td>
-      </tr><tr><td>
-          <p><code><a href="summary.vector.html">summary(<i>&lt;vector&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Calculates data quality metrics for a vector.</p></td>
-      </tr><tr><td>
-          <p><code><a href="unique2clipboard.html">unique2clipboard()</a></code> </p>
-        </td>
-        <td><p>Send values to clipboard</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

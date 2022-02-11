@@ -2,9 +2,9 @@
 % Please edit documentation in R/grouped_info_shiny.R
 \name{grouped.info.app}
 \alias{grouped.info.app}
-\title{Interactive app for tracking mutual info.}
+\title{Interactive app for tracking mutual info across a grouping varibale.}
 \usage{
-grouped.info.app(data, group_var)
+grouped.info.app(data, group_var, discrete_bins = 50)
 }
 \arguments{
 \item{data}{The data set to calculate mutual info from}
@@ -16,5 +16,5 @@ Starts a shiny App where variable pairs can be selected and the
 change in mutual information shown.
 }
 \description{
-Interactive app for tracking mutual info.
+Interactive app for tracking mutual info across a grouping varibale.
 }

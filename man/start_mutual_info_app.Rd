@@ -7,5 +7,5 @@
 start_mutual_info_app()
 }
 \description{
-Start app for visualizing mutual info
+TODO: remap so works on install.
 }
