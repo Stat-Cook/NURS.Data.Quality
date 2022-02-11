@@ -11,8 +11,7 @@ summary.vector <- function(values, ...){
   #' `Most common ratio`: Level of data represeted by the modal class.
   #'
   #' @param values 
-  #' 
-  #' @export
+  #' @noRd  
   args <- c(...)
   values <- unlist(values)
   len <- length(values)
@@ -28,7 +27,8 @@ summary.vector <- function(values, ...){
 }
 
 summary.vector.2 <- function(values, ...){
-  #' @export
+  #'
+  #' @noRd  
   args <- c(...)
   values <- unlist(values)
   len <- length(values)
@@ -42,6 +42,8 @@ summary.vector.2 <- function(values, ...){
 }
 
 data.quality.plot <- function(grouped, col, scale="linear"){
+  #' 
+  #' @noRd  
   dq.data <- grouped %>% 
     select(col) %>%  group_map(summary.vector) %>% 
     do.call(rbind, .)
@@ -71,6 +73,8 @@ data.quality.plot <- function(grouped, col, scale="linear"){
 
 
 data.quality.function <- function(data, group_var, Col, scale="Linear"){
+  #'
+  #' @noRd  
   grouped <- data %>% group_by(data[group_var])
   data.quality.plot(grouped, Col, scale)
 }

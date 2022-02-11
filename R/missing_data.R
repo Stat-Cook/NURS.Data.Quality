@@ -1,4 +1,5 @@
-MISSING_TYPES <- c(NA, "", " ", "NA", "nan", "NULL", "Null", "null", "  /  /    ")
+MISSING_TYPES <- c(NA, "", " ", "NA", "nan", "NULL", "Null", "null", 
+                   "  /  /    ")
 
 is.missing <- function(values, missing_types=MISSING_TYPES){
   #' Vector function - identify which values are 'missing'
@@ -7,7 +8,7 @@ is.missing <- function(values, missing_types=MISSING_TYPES){
   #' @param missing_types  Vector of values classified as missing.
   #' 
   #' @return Vector of which values are 'missing'
-  #' @export
+  #' @noRd
   
   sapply(values, function(i) i %in% missing_types)
 }
@@ -19,6 +20,7 @@ average_missing <- function(data, missing_types=MISSING_TYPES){
   #' @param missing_type Vector of values classified as missing.
   #' 
   #' @return Vector of prevalence of missing values.
+  #' @export
 
   missing_func <- function(values) mean(is.missing(values, missing_types))
   apply_to_dataframe(data, missing_func)

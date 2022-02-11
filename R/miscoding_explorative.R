@@ -5,7 +5,8 @@ sqrt_comparison <- function(l_unique, l_total){
   #' @param l_total number of observations
   #' 
   #' @return Boolean - TRUE: more unique values than the square root of the number of observations.
-  #' @export
+  #' 
+  #' @noRd  
   l_unique > sqrt(l_total)
 }
 
@@ -17,7 +18,7 @@ compare_frequencies <- function(values, limit=0.8){
   #'  @param limit The upper limit on how often one value should occur.  Real value [0, 1]. 
   #'  
   #'  @return Boolean 
-  #' @export
+  #'  @export
   
   freq <- table(values)
   any(freq > limit*sum(freq))

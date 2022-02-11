@@ -3,8 +3,8 @@ crosstab.proportion <- function(data, target, group_var){
   #' 
   #' @param target Variable to calculate proportions of.
   #' @param group_var Variable to group data by. 
-  #'
-  #' @export
+  #' 
+  #' @noRd  
   target.string <- substitute(target)
   group_var.string <- substitute(group_var)
     

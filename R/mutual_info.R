@@ -4,7 +4,7 @@ encode_values <- function(values){
   #' @param values Vector of values to be encoded.
   #' 
   #' @return Vector of integer values
-  #' @export 
+  #' @noRd  
   as.numeric(as.factor(values))
 }
 
@@ -17,7 +17,7 @@ discrete.data <- function(data, ...){
   #' @param ... Extra arguments to pass to the infotheo::discretize call.
   #' 
   #' @export
-  #' 
+  #' @noRd
   copied <- data
   numeric_columns <- sapply(copied, is.numeric)
   factor_columns <- colnames(copied[!numeric_columns])
@@ -38,23 +38,9 @@ mutual_info <- function(data, ...){
   #' @param data Data frame (n by k) of observations
   #' 
   #' @return matrix (k by k) of mutual information.  Diagonal represents total information a varaible has.
-  #' @export
+  #' @noRd
   disc.df <- discrete.data(data, ...)
-  # K <- dim(data)[2]
-  # 
-  # info <- sapply(
-  #   1:K, 
-  #   function(i) sapply(
-  #     1:K, 
-  #     function(j) infotheo::multiinformation(disc.df[,c(i,j)])
-  #   )
-  # )
-  # 
-  # rownames(info) <- colnames(data)
-  # colnames(info) <- colnames(data)
-  # 
-  # info
-  
+
   infotheo::mutinformation(disc.df)
 }
 
@@ -73,7 +59,7 @@ column_info_func <- function(col1, col2){
   #'     group_map(column_info_func("Chick", "weight")) %>% 
   #'     do.call(rbind, .)
   #' 
-  #' @export
+  #' @noRd
   #' 
   f <- function(data, ...){
     args <- c(...)

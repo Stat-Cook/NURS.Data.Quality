@@ -3,8 +3,7 @@ library(tidyverse)
 library(glue)
 
 grouped.info.function <- function(data, group_var, Col1, Col2, scale="Linear"){
-  #' Produces a plot of mutual information between two columns as a function 
-  #' of a third variable, i.e. x = group_var, y = mutinfo(Col1, Col2).
+  #' Internal wrapper to grouped.info.plot
   #' 
   #' @param data Data frame to be analyzed
   #' @param group_var The variable to group data by.  Acts as the x-axis in the plot.
@@ -19,11 +18,6 @@ grouped.info.function <- function(data, group_var, Col1, Col2, scale="Linear"){
   disc.df <- discrete.data(data, nbins=50)
   grouped <- disc.df %>% group_by(data[group_var])
   
-  grouped.info.plot(grouped, Col1, Col2, scale)
-}
-
-grouped.info.plot <- function(grouped, Col1, Col2, scale="Linear"){
-  #' @export
   info <- grouped %>% group_map(column_info_func(Col1, Col2)) %>%
     do.call(rbind, .)%>% round(5)
   
@@ -45,9 +39,33 @@ grouped.info.plot <- function(grouped, Col1, Col2, scale="Linear"){
   
   p
 }
+# 
+# grouped.info.plot <- function(grouped, Col1, Col2, scale="Linear"){
+# 
+#   info <- grouped %>% group_map(column_info_func(Col1, Col2)) %>%
+#     do.call(rbind, .)%>% round(5)
+# 
+#   info <- cbind(info[,1], info[,3] / info[,2], info[,3] / info[,5])
+#   rownames(info) <- info[,1]
+# 
+#   colnames(info)[2:3] <- c(
+#     glue("{Col2} on {Col1}"),
+#     glue("{Col1} on {Col2}")
+#   )
+#   p <- info[,2:3] %>% reshape2::melt() %>%
+#     ggplot(aes(x=Var1, y=value, color=Var2)) +
+#     xlab("") + ylab("Information") +
+#     geom_line(size=2) + ylim(0, 1) +labs(color="")
+# 
+#   if (scale == "Log"){
+#     p <- p + scale_y_continuous(trans = "log10", limits= c(1e-2, 1))
+#    }
+#    
+#    p
+#  }
 
 grouped.info.app <- function(data, group_var, discrete_bins=50){
-  #' Interactive app for tracking mutual info.
+  #' Interactive app for tracking mutual info across a grouping varibale.
   #'
   #' @param data The data set to calculate mutual info from
   #' @param group_var The variable to group by and use as the x-axis in plots
@@ -113,9 +131,3 @@ grouped.info.app <- function(data, group_var, discrete_bins=50){
   shinyApp(ui = ui, server = server)
 }
 
-# grouped.info.app(ChickWeight, "Diet")
-# 
-# 
-# ChickWeight %>% grouped.info.function(
-#   'Diet', 'Time', 'x1', 'Linear'
-# )

@@ -8,7 +8,7 @@ prepare_data <- function(data, outcome){
   #' @param outcome The column of data frame to be treated as the outcome state.
   #' 
   #' @return list(train_data, test_data)
-  #' @export
+  #' @noRd  
   y <- data[,outcome] %>% is.missing() %>% factor(levels=c(FALSE, TRUE))
   x <- data %>% select(-outcome)
 
@@ -35,7 +35,7 @@ build_model <- function(data, method="rpart"){
   #' @param method Method call from `carat::train` to use for binary-classication
   #' 
   #' @return `caret` model 
-  #' @export
+  #' @noRd  
   caret::train(y ~ ., data=data, method=method)
 }
 
@@ -46,7 +46,7 @@ model_roc <- function(data, model){
   #' @param model `caret` model that has been pre-trained.
   #' 
   #' @return ROC value
-  #' @export
+  #' @noRd  
   outcome <- data.frame(
     obs = data[,"y"],
     pred = predict(model, data)
@@ -61,25 +61,6 @@ model_roc <- function(data, model){
   result <- outcome %>% roc("obs", "TRUE")
   as.numeric(result$auc)
 }
-
-# {
-#   data <- aSAH
-#   data$y <- as.factor(aSAH$outcome == "Good")
-#   model <- build_model(data)
-#   outcome <- data.frame(
-#     obs = data[,"y"],
-#     pred = predict(model, data)
-#   )
-#   outcome <- cbind(
-#     outcome,
-#     predict(model, data, type="prob")
-#   )
-#   outcome
-#   
-#   model_roc(data, model)
-# 
-# }
-# outcome %>% head()
 
 missing_mine <- function(data, method="rpart"){
   #' Analyze each column of a data set that has missing values for patterns of missingness.
