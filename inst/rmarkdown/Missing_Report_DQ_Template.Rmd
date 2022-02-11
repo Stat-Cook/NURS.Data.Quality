@@ -1,0 +1,122 @@
+---
+title: "Template1"
+output: html_document
+params:
+  path: C:\Users\LOCAL_~3\Temp\RtmpkPFN75\file478c7eb84396
+  extra_missing_types: c()
+
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo=F, warning=F, message = F)
+```
+
+``` {r}
+{
+  library(tidyverse)
+  library(lubridate)
+  library(shiny)
+  library(caret)
+  library(pROC)
+  library(glue)
+}
+
+modal.size <- function(values){
+  modal.size <- table(values) %>% sort() %>% tail(1)
+  modal.size / length(values) 
+}
+
+data <- params$path %>% readRDS()
+missing <- c(MISSING_TYPES, "  /  /    ", "NULL", "null", "Null")
+missing.rates <- data %>% NURS.Data.Quality:::is.missing(missing) %>% apply(2, mean)
+
+miss.1 <- which(missing.rates == 1) %>% names()
+miss.gr0.8 <- which((missing.rates >= 0.8) & (missing.rates < 1))%>% names()
+miss.gr0.5 <- which((missing.rates >= 0.5) & (missing.rates < 0.8))%>% names()
+miss.gr0.2 <- which((missing.rates >= 0.2) & (missing.rates < 0.5))%>% names()
+miss.gr0.0 <- which((missing.rates > 0.0) & (missing.rates < 0.2))%>% names()
+miss.0 <- which((missing.rates == 0.0))%>% names()
+
+missing.cat <- c(length(miss.1), length(miss.gr0.8),
+  length(miss.gr0.5), length(miss.gr0.2), 
+  length(miss.gr0.0), length(miss.0))
+m <- max(missing.cat)
+lpad <- function(values, n, with=""){
+  c(values, rep(with, n - length(values)))
+}
+
+tibble(
+  `Missing Group` = c("100% Missing", "[80%, 100%) Missing", "[50%, 80%) Missing", 
+    "[20%, 50%) Missing", "(0%, 20%) Missing", "0% Missing"),
+  `Frequency` = c(length(miss.1), length(miss.gr0.8), length(miss.gr0.5), 
+    length(miss.gr0.2), length(miss.gr0.0), length(miss.0))
+) %>% knitr::kable(caption = "Frequnecy of variables by rate of missing values.")
+
+tibble(
+  `100% Missing` = lpad(miss.1, m),
+  `[80%, 100%) Missing` = lpad(miss.gr0.8, m),
+  `[50%, 80%) Missing` = lpad(miss.gr0.5, m),
+  `[20%, 50%) Missing` = lpad(miss.gr0.2, m),
+  `(0%, 20%) Missing` = lpad(miss.gr0.0, m),
+  `0% Missing` = lpad(miss.0, m)
+) %>% knitr::kable(caption = "Variable IDs for each rate of missing values.")
+
+```
+
+``` {r}
+modal.sizes <- data %>% apply(2, modal.size)
+
+modal.1 <- which(modal.sizes == 1) %>% names()
+modal.gr0.8 <- which((modal.sizes >= 0.8) & (modal.sizes < 1))%>% names()
+modal.gr0.5 <- which((modal.sizes >= 0.5) & (modal.sizes < 0.8))%>% names()
+modal.gr0.2 <- which((modal.sizes >= 0.2) & (modal.sizes < 0.5))%>% names()
+modal.gr0.0 <- which((modal.sizes > 0.0) & (modal.sizes < 0.2))%>% names()
+modal.0 <- which((modal.sizes == 0.0))%>% names()
+
+tibble(
+  `Modal Group` = c("100% Modal", "[80%, 100%) Modal", "[50%, 80%) Modal", 
+    "[20%, 50%) Modal", "(0%, 20%) Modal", "0% Modal"),
+  `Frequency` = c(length(modal.1), length(modal.gr0.8), length(modal.gr0.5), 
+    length(modal.gr0.2), length(modal.gr0.0), length(modal.0))
+) %>% knitr::kable(caption = "Frequnecy of variables by rate of missing values.")
+```
+
+``` {r}
+m.modal <- c(length(modal.1), length(modal.gr0.8), length(modal.gr0.5), 
+    length(modal.gr0.2), length(modal.gr0.0), length(modal.0)) %>% max()
+
+tibble(
+  `100% Modal` = lpad(modal.1, m.modal),
+  `[80%, 100%) Modal` = lpad(modal.gr0.8, m.modal),
+  `[50%, 80%) Modal` = lpad(modal.gr0.5, m.modal),
+  `[20%, 50%) Modal` = lpad(modal.gr0.2, m.modal),
+  `(0%, 20%) Modal` = lpad(modal.gr0.0, m.modal),
+  `0% Modal` = lpad(modal.0, m.modal)
+) %>% knitr::kable(caption = "Variable IDs for each rate of modal values.")
+```
+
+``` {r}
+low.missing.high.modal <- which((missing.rates < 0.5) & (modal.sizes > 0.8)) %>% names()
+
+extract.modal <- function(values){
+  modal <- values %>% table() %>% sort() %>% tail(1)
+  return(modal)
+  rate <- round(modal / length(values)*100, 1)
+  name <- names(modal)
+  c(name, rate)
+}
+
+modal.groups <- data[,low.missing.high.modal] %>% lapply(extract.modal)
+group <- sapply(modal.groups, names)
+freq <- sapply(modal.groups, function(i)  i)
+modal.perc <- tryCatch(
+  round(100*freq / nrow(data), 1),
+  error = function(i) c()
+)
+tibble(
+  Variable = low.missing.high.modal,
+  `Modal Group` = group, 
+  `Modal %` = modal.perc
+) %>% knitr::kable(caption = "Singular data (low missing rates)")
+```
+
